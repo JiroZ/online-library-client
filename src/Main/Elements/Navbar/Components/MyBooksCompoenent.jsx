@@ -3,7 +3,6 @@ import {Button, Container} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import {APIService} from "../../../../Services/APIService";
 import {useSelector} from "react-redux";
-import axios from "axios";
 
 const MyBooks = () => {
     const [issuedBooks, setIssuedBooks] = useState([])

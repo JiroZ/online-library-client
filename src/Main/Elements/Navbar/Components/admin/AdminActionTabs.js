@@ -1,6 +1,5 @@
 import {Button, Col, Container, Form} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
-import axios from "axios";
 import {APIService} from "../../../../../Services/APIService";
 import {BookRequestActionButtons} from "../../../../Pages/Elements/CustomButtons";
 
@@ -146,7 +145,7 @@ const ManageBooksTab = () => {
     const handleBookDeleteSubmit = (e) => {
         e.preventDefault();
 
-        axios.get(`http://localhost:8989/books/delete/${bookToDelete}`, APIService.config).then(response => {
+        APIService.deleteBook(bookToDelete).then(response => {
             console.log(response.data)
         }).catch((err) => {
             console.warn('error during http call deleting book', err);

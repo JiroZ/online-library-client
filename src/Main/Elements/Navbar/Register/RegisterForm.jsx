@@ -1,30 +1,15 @@
-import {Container, Form, InputGroup, Button, FormControl} from "react-bootstrap";
-import axios from "axios";
+import {Container, Form, InputGroup, Button} from "react-bootstrap";
 import {Formik} from "formik";
 import * as yup from "yup";
 import {CloseUserModel} from "../../../../Redux/UserLogin/Actions";
 import {useDispatch} from "react-redux";
+import {APIService} from "../../../../Services/APIService";
 
 const RegisterForm = () => {
     const dispatch = useDispatch();
 
     const handleRegisterSubmit = (e) => {
-        const user = {
-            email: e.email,
-            userName: e.userName,
-            password: e.password
-        }
-
-        let body = JSON.stringify(user)
-        console.log(user)
-
-        const config = {
-            headers: {
-                'Content-Type': 'application/JSON'
-            }
-        }
-
-        axios.post(`http://localhost:8989/user/registration`, body, config).then(response => {
+        APIService.registerUser(e.email, e.userName, e.password).then(response => {
             console.log(response)
             console.log(response.data)
         }).catch((err) => {
@@ -65,10 +50,7 @@ const RegisterForm = () => {
             >{({
                    handleSubmit,
                    handleChange,
-                   handleBlur,
                    values,
-                   touched,
-                   isValid,
                    errors,
                }) => (
                 <Form noValidate onSubmit={(e) => handleRegisterSubmit(e)}>

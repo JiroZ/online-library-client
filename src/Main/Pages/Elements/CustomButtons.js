@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import axios from "axios";
 import {APIService} from "../../../Services/APIService";
+import user from "../../../Redux/UserLogin/Reducers/User";
 
 
 const BookActionButton = (props) => {
@@ -23,7 +24,7 @@ const BookActionButton = (props) => {
             }
         }
 
-        axios.get(`http://localhost:8989/access/requests/${userEmail}`, APIService.config).then(response => {
+        APIService.getAccessRequestsByEmail(userEmail).then(response => {
             for (let data of response.data) {
                 if (data.bookId === bookId) {
                     setRequestExists(true)
@@ -40,7 +41,7 @@ const BookActionButton = (props) => {
     function handleDownload(e) {
         e.preventDefault()
 
-        axios.get(`http://localhost:8989/books/download/${bookId}`, APIService.config).then(response => {
+        APIService.downloadBookByID(bookId).then(response => {
             let binaryString = window.atob(response.data.bookFileByte);
             let binaryLen = binaryString.length;
             let bytes = new Uint8Array(binaryLen);
@@ -60,12 +61,7 @@ const BookActionButton = (props) => {
         e.preventDefault()
         setButtonDisabled(true)
 
-        const body = {
-            bookId: bookId,
-            emailId: userEmail
-        }
-
-        axios.post('http://localhost:8989/access/request', body, APIService.config).then(response => {
+        APIService.requestAccess(bookId, userEmail).then(response => {
             console.log(response)
             window.location.reload()
         }).catch(err => {
@@ -107,12 +103,7 @@ const BookRequestActionButtons = (props) => {
         e.preventDefault()
         setDisableButton(true)
 
-        const body = {
-            bookId: props.BookId,
-            requestId: props.RequestId,
-            emailId: props.EmailId
-        }
-        axios.post('http://localhost:8989/access/approve', body, APIService.config).then(response => {
+        APIService.approveAccess(props.BookId, props.EmailId, props.RequestId).then(response => {
             console.log(response.data)
             window.location.reload();
         }).catch(err => {
@@ -125,13 +116,7 @@ const BookRequestActionButtons = (props) => {
         e.preventDefault()
         setDisableButton(true)
 
-        const body = {
-            bookId: props.BookId,
-            requestId: props.RequestId,
-            emailId: props.EmailId
-        }
-
-        axios.post('http://localhost:8989/access/reject', body, APIService.config).then(response => {
+        APIService.rejectAccessRequest(props.BookId, props.EmailId, props.RequestId).then(response => {
             console.log(response.data)
             window.location.reload();
         }).catch(err => {

@@ -2,8 +2,6 @@ import {Button, Container, Form, InputGroup} from "react-bootstrap";
 
 import {Formik} from "formik"
 
-import axios from 'axios'
-
 import {useDispatch} from "react-redux";
 import {AdminAuthorities, CloseUserModel, InitAuthResponse, SignIn} from "../../../../Redux/UserLogin/Actions";
 
@@ -24,7 +22,7 @@ const LoginForm = () => {
 
         console.log(body)
 
-        axios.post(`http://localhost:8989/user/auth`, body, APIService.config).then(response => {
+        APIService.authUser(e.email, e.password).then(response => {
             console.log(response)
             let isAdmin = false;
             if (response.data.authenticated) {
@@ -43,8 +41,6 @@ const LoginForm = () => {
             console.warn('error during http call Response: ', err.response);
         });
         console.log(LoadAuthToken())
-
-        dispatch(CloseUserModel())
         return false;
     };
 
